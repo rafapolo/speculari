@@ -78,7 +78,7 @@ module Helper
         json = HTTP::Client.get("#{url}#{path}").body
         File.write(cache, json)
         Logger.log "=> #{url}#{path}".colorize(:green)
-      end
+      end      
     rescue e
       Logger.log "error: #{e.message}".colorize(:red)
     end
@@ -86,12 +86,16 @@ module Helper
   end
 
   def update_last_eur_brl
-    json = get_json("https://economia.awesomeapi.com.br", "/eur")[0]
-    Config.params[:eur_brl] = json["ask"].to_s.to_f64
-    var_eur_brl = percentage(json["low"].to_s.to_f64, json["high"].to_s.to_f64)
-    spread = percentage(json["bid"].to_s.to_f64, json["ask"].to_s.to_f64)
-    puts "EUR:BRL: #{Config.params[:eur_brl]}".colorize(:light_red)
-    puts "#{var_eur_brl}% diff : #{spread}% spread".colorize(:light_red)
+    unless Config.params[:eur_brl]
+      json = get_json("https://economia.awesomeapi.com.br", "/eur")[0]
+      Config.params[:eur_brl] = json["ask"].to_s.to_f64
+      var_eur_brl = percentage(json["low"].to_s.to_f64, json["high"].to_s.to_f64)
+      spread = percentage(json["bid"].to_s.to_f64, json["ask"].to_s.to_f64)
+      puts "EUR:BRL: #{Config.params[:eur_brl]}".colorize(:light_red)
+      puts "#{var_eur_brl}% diff : #{spread}% spread".colorize(:light_red)
+    else
+      puts "EUR:BRL! #{Config.params[:eur_brl]}".colorize(:light_red)
+    end
   end
 
   def to_eur(f64)
@@ -154,6 +158,7 @@ module Helper
 end
 
 include Helper
+puts intro
 
 class Logger
   def self.log(msg, file=:renda, error=false)

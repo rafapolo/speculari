@@ -3,6 +3,7 @@ class Config
 
   def initialize    
     # @params[:requests] = 0
+    @params[:eur_brl] = false
     @params[:web] = false
     @params[:cache] = false
     @params[:log] = false

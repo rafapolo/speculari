@@ -34,6 +34,7 @@ OptionParser.parse do |args|
   args.banner = "Usage: rico [arguments]"
   args.on("-l", "--log", "Show broker HTTP/JSON request/answer logs"){ config[:log] = true }
   args.on("-c", "--cache", "Use last cached requests"){ config[:cache] = true }
+  args.on("-e EURO", "--euro=EURO", "Define EURO:BRL manually"){ |e| config[:eur_brl] = e.to_f64 }
   # args.on("-s", "--simulate", "Fake buy"){ config[:simulate] = true }
   # args.on("-a", "--assets", "Show wallets"){ Wallet.assets(:format) }
   # args.on("-t", "--total", "Sum wallets values and taxes in dolar"){ Wallet.total(:format) }
@@ -47,13 +48,8 @@ OptionParser.parse do |args|
   args.on("-h", "--help", "Show this help") { puts args; exit }
 end
 
-puts intro
-
-if config[:cache]
-  update_last_eur_brl
-else
-  spawn { puts "Updating..."; Broker.update! } 
-end
+update_last_eur_brl
+spawn { Broker.update! } unless config[:cache]
 
 Kemal.run if config[:web]
 

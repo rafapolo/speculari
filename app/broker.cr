@@ -7,10 +7,11 @@ module Broker
   end
 
   def self.update!
-    update_last_eur_brl
+    update_last_eur_brl unless Config.params[:eur_brl]
+    puts "Updating..."
     Broker.all.each do |b|
       b.coins.each do |coin|
-        spawn { b.book(coin) }
+        spawn { b.trades(coin) }
       end    
     end
   end
