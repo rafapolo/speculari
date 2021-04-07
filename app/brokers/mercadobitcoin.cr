@@ -3,9 +3,10 @@ require "./exchange"
 module Broker
 
     class MercadoBitcoin < Exchange
-        @coins = ["btc", "ltc", "usdc", "xrp", "bch", "eth"]
+        @coins = ["btc", "ltc", "usdc", "xrp", "bch", "eth", "paxg", "link", "chz"]
 
         def book(coin)
+            return [] of Order unless @coins.index(coin)
             book = get_json("https://www.mercadobitcoin.net", "/api/#{coin}/orderbook/")
             orders = Array(Order).new
             asks = book["asks"]

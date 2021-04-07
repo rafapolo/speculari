@@ -1,16 +1,22 @@
 head
   title= "Speculari | €/R$#{Config.params[:eur_brl]}"
   meta charset="UTF-8"
-  script src="js/plotly-latest.min.js"
-  script src="js/umbrellajs.js"
+  script src="/js/plotly-latest.min.js"
+  script src="/js/umbrellajs.js"
 
 css:
   * {margin: 0px; padding: 0px}
   body { font-family: "Ubuntu"; font-size: 13px; padding: 10px; text-align: center; background-image: linear-gradient(to bottom right, gray, lightgray);}
-  #arb { width: 49%; padding: 5px; display: inline-block } 
+  .arb { width: 65%; padding: 5px; display: inline-block } 
   .graph { border: 1px solid black; }
   .stats{ text-align: right; padding: 5px; position: relative; top: -25px;}
-  
+  .red{color: red}
+  .green{color: green}  
+  .lado{display: inline-block; padding: 3px;}
+  .center{text-align: center}
+  .book{vertical-align: top; font-weight: 500; font-size: 13px; padding-top: 30px; background-color: white; display: inline-block; border: 1px solid black; padding: 20px; margin: 5px;}
+
+
 javascript:
   u(document).on("DOMContentLoaded", function(){
 
@@ -57,7 +63,6 @@ javascript:
           var prices = trades.map(function(e, i){ return e.value.toFixed(3) });
           var times = trades.map(function(e, i){ return e.utc });
           var values = trades.map(function(e, i){ return e.price.toFixed(2) });
-
           var avg = prices.reduce((a, b) => (parseFloat(a) + parseFloat(b))) / prices.length;
           var symb = type == "bought" ? " < " : " > ";
 
@@ -65,10 +70,11 @@ javascript:
             x: times,
             y: prices,
             name: broker + symb + trades.length,
-            line: {shape: 'spline'},
-            hovertemplate: 'R$%{y:€.2f}<br>Total: %{text}',
             text: values,
+            line: {shape: 'spline'},
+            hovertemplate: '%{y:€.2f}',
             type: 'scatter',
+            hovertemplate: 'R$%{y:€.2f}<br>Total: %{text}',
             mode: 'lines+markers',
             marker: { size: 4 }
           };
@@ -80,12 +86,28 @@ javascript:
   });
 
 body
-  #quotes
-    - perms = [Broker::Braziliex.new, Broker::Kraken.new].combinations(2)
+    - perms = Broker.all.combinations(2)
     - perms.each do |duo|
-        / h3= "#{duo[0].broker_name} ⟷ #{duo[1].broker_name}"      
-        - coins = (duo[0].coins & duo[1].coins)
-        - coins.each do |coin|
-          #arb
-            .graph b1=duo[0].to_s b2=duo[1].to_s coin=coin id="graph-#{duo[0].to_s}-#{duo[1].to_s}-#{coin}"
-            p.stats b1=duo[0].to_s b2=duo[1].to_s coin=coin id="stats-#{duo[0].to_s}-#{duo[1].to_s}-#{coin}" %
+          #quotes
+            .arb
+                .graph b1=duo[0].to_s b2=duo[1].to_s coin=coin id="graph-#{duo[0].to_s}-#{duo[1].to_s}-#{coin}"
+                p.stats b1=duo[0].to_s b2=duo[1].to_s coin=coin id="stats-#{duo[0].to_s}-#{duo[1].to_s}-#{coin}" %
+            .book
+                .lado
+                    p= duo[0].to_s
+                    br
+                    .green.center
+                        - duo[0].bids(coin).each do |o|
+                            p= o
+                    .red.center
+                        - duo[0].asks(coin).each do |o|
+                            p= o
+                .lado
+                    p= duo[1].to_s
+                    br
+                    .red.center
+                        - duo[1].asks(coin).each do |o|
+                            p= o
+                    .green.center
+                        - duo[1].bids(coin).each do |o|
+                            p= o   

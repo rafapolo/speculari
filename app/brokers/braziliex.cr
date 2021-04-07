@@ -3,7 +3,7 @@ require "./exchange"
 module Broker
   class Braziliex < Exchange
     @coins =
-    ["brl","btc","bch","ltc","eth","dash","zec","dcr","xrp","usdt","tusd","zrx","dai","paxg","sngls","brzx","gmr","omg","gnt","epc","abc","xmr","mxt","smart","nbr","bsv","crw","lcc","onix","etc","iop","btg","eos","prsp","cfty","trx"]
+    ["brl","btc","bch","ltc","eth","dash","zec","dcr","xrp","usdt","tusd","zrx","dai","paxg","sngls","brzx","gmr","omg","gnt","epc","abc","mxt","smart","nbr","bsv","crw","lcc","onix","etc","iop","btg","eos","prsp","cfty","trx"]
 
     def fees
       result = Hash(String, Float64).new
@@ -15,6 +15,7 @@ module Broker
     end
 
     def book(coin)
+      return [] of Order unless @coins.index(coin)
       book = get_json("https://braziliex.com", "/api/v1/public/orderbook/#{coin}_brl")
       orders = Array(Order).new
       asks = book["asks"]

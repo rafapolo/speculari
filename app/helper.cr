@@ -36,7 +36,11 @@ module Helper
     if !unix.empty? # unix time!
       date = Time.unix(unix.[0][0].to_i64)
     else
-      date = Time.parse(ms, "%Y-%m-%dT%H:%M:%S.%6N", Time::Location::UTC)
+      if ms[19]=="."
+          date = Time.parse(ms, "%Y-%m-%dT%H:%M:%S.%6N", Time::Location::UTC)
+      else
+          date = Time.parse(ms, "%Y-%m-%dT%H:%M:%S", Time::Location::UTC)
+      end
     end    
   end
 

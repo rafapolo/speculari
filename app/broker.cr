@@ -3,7 +3,7 @@ require "./brokers/*"
 module Broker
 
   def self.all
-    [Broker::MercadoBitcoin.new, Broker::Kraken.new]
+    [Broker::MercadoBitcoin.new, Broker::Kraken.new, Broker::Bitrex.new, Broker::Braziliex.new, Broker::NovaDAX.new]
   end
 
   def self.update!
@@ -17,15 +17,6 @@ module Broker
   end
 
   def self.by_name(name)    
-    return case name
-    when "novadax"
-      Broker::NovaDAX.new
-    when "mercadobitcoin"
-      Broker::MercadoBitcoin.new
-    when "braziliex"
-      Broker::Braziliex.new
-    when "kraken"
-      Broker::Kraken.new
-    end    
+    self.all.each{|b| return b if b.to_s == name}
   end  
 end

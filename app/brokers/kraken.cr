@@ -3,7 +3,7 @@ require "./exchange"
 module Broker
     class Kraken < Exchange
         @coins =
-        ["eth","btc","xrp","ltc","usdt","bch","rep","zec","ada","qtum","xtz","atom","gno","eos","mln","bat","waves","icx","link","sc","omg","paxg","nano","lsk","algo","trx","oxt","kava","comp","storj","knc","repv2","xmr","xlm","dash","dai","usdc", "xdg"]
+        ["eth","btc","xrp","ltc","usdt","bch","rep","zec","ada","qtum","xtz","atom","gno","eos","mln","bat","waves","icx","link","sc","omg","paxg","nano","lsk","algo","trx","oxt","kava","comp","storj","knc","repv2","xmr","xlm","dash","dai","usdc", "xdg","chz"]
 
         COIN_CODE = {
         "eth": "XETHZEUR",
@@ -47,6 +47,8 @@ module Broker
         }
 
         def book(coin)
+            return [] of Order unless @coins.index(coin)
+
         url_coin = coin=="btc" ? "xbt" : coin
 
         book = get_json("https://api.kraken.com", "/0/public/Depth?pair=#{url_coin}eur")["result"][COIN_CODE[coin]]

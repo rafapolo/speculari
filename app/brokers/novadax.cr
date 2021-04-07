@@ -4,6 +4,7 @@ module Broker
         @coins = ["btc", "dgb", "dcr", "eth", "bsv", "xmr", "bch", "xlm", "xrp", "waves", "etc", "trx", "btt", "eos", "ada", "bnb", "link", "dash", "ltc", "xtz", "iota", "omg", "doge", "nuls", "brz"]
 
         def book(coin)
+            return [] of Order unless @coins.index(coin)
             book = get_json("https://api.novadax.com", "/v1/market/depth?symbol=#{coin.upcase}_BRL&limit=500")["data"]
             orders = Array(Order).new
             asks = book["asks"]

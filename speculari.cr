@@ -7,12 +7,14 @@ require "option_parser"
 require "./app/*"
 
 get "/" do |env| 
-  render "public/views/index.slang"
+  # arbs = Strategy.get_arbitrages
+  # render "public/views/index.slang"
+  render "public/views/arbs.slang"
 end
 
-get "/arbs" do |env| 
-  # arbs = Strategy.get_arbitrages
-  render "public/views/arbs.slang"
+get "/coin/:coin" do |env| 
+  coin = env.params.url["coin"]
+  render "public/views/coin.slang"
 end
 
 get "/:broker/:coin/orders.json" do |env| 
@@ -50,7 +52,36 @@ end
 
 update_last_eur_brl
 spawn { Broker.update! } unless config[:cache]
-
 Kemal.run if config[:web]
+
+# b = Broker::Braziliex.new
+# k = Broker::Kraken.new
+
+# (b.coins & k.coins).each do |coin|
+#   puts coin
+#   bids = b.bids(coin)
+#   asks = b.asks(coin)
+
+#   # puts b.to_s
+#   bid1 = bids.first
+#   ask1 = asks.first
+#   # puts "last bid: #{bid1.to_s}"
+#   # puts "last ask: #{ask1.to_s}"
+
+#   bids = k.bids(coin)
+#   asks = k.asks(coin)
+#   # puts k.to_s
+#   bid2 = bids.first
+#   ask2 = asks.first
+#   # puts "last bid: #{bid2.to_s}"
+#   # puts "last ask: #{ask2.to_s}"
+
+#   p = percentage(ask2.value, bid1.value)  
+#   puts "<- #{p}% | #{ask2.value} : #{bid1.value}"
+#   p = percentage(ask1.value, bid2.value)
+#   puts "-> #{p}% | #{ask1.value} : #{bid2.value}"
+
+#   puts
+# end
 
 finish!
