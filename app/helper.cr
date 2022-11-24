@@ -89,6 +89,12 @@ module Helper
     JSON.parse(json)
   end
 
+
+  def update_last_brl_rates
+    update_last_eur_brl
+    update_last_usd_brl
+  end
+
   def update_last_eur_brl
     unless Config.params[:eur_brl]
       json = get_json("https://economia.awesomeapi.com.br", "/eur")[0]
@@ -102,9 +108,26 @@ module Helper
     end
   end
 
+    def update_last_usd_brl
+    unless Config.params[:usd_brl]
+      json = get_json("https://api.binance.com", "/api/v3/depth?symbol=USDTBRL") #get_json("https://economia.awesomeapi.com.br", "/usd")[0]
+      Config.params[:usd_brl] = json["asks"].[0][0].to_s.to_f64
+      #var_usd_brl = percentage(json["low"].to_s.to_f64, json["high"].to_s.to_f64)
+      spread = percentage(json["bids"][0][0].to_s.to_f64, json["asks"].[0][0].to_s.to_f64)
+      puts "USD:BRL: #{Config.params[:usd_brl]}".colorize(:light_red)
+      puts "#{spread}% spread".colorize(:light_red)
+    else
+      puts "USD:BRL! #{Config.params[:usd_brl]}".colorize(:light_red)
+    end
+  end
+
   def to_eur(f64)
     f64 / f(Config.params[:eur_brl])
   end
+
+  def to_usd(f64)
+    f64 / f(Config.params[:usd_brl])
+  end  
 
   def test_colors
      colors = [:black, :red, :green, :yellow, :blue, :magenta, :cyan, :light_gray, :dark_gray, :light_red, :light_green, :light_yellow, :light_blue, :light_magenta, :light_cyan, :white]

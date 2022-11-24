@@ -1,14 +1,14 @@
 # author: rafael polo
 
 require "kemal"
-require "kilt"
+# require "kilt"
 require "kilt/slang"
 require "option_parser"
 require "./app/*"
+require "openssl"
 
 get "/" do |env| 
   # arbs = Strategy.get_arbitrages
-  # render "public/views/index.slang"
   render "public/views/arbs.slang"
 end
 
@@ -33,7 +33,7 @@ end
 
 config = Config.params
 OptionParser.parse do |args|
-  args.banner = "Usage: rico [arguments]"
+  args.banner = "Usage: speculari [arguments]"
   args.on("-l", "--log", "Show broker HTTP/JSON request/answer logs"){ config[:log] = true }
   args.on("-c", "--cache", "Use last cached requests"){ config[:cache] = true }
   args.on("-e EURO", "--euro=EURO", "Define EURO:BRL manually"){ |e| config[:eur_brl] = e.to_f64 }
@@ -50,7 +50,7 @@ OptionParser.parse do |args|
   args.on("-h", "--help", "Show this help") { puts args; exit }
 end
 
-update_last_eur_brl
+update_last_usd_brl
 spawn { Broker.update! } unless config[:cache]
 Kemal.run if config[:web]
 
