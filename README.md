@@ -13,12 +13,7 @@ Kraken and MercadoBitcoin shown below — as they appear and close.
 Crystal was a deliberate choice: a statically-typed, compiled language with Ruby-like
 syntax, chosen specifically for the concurrency (lightweight fibers via `spawn`) and
 raw throughput this workload needs — polling several exchange APIs in parallel,
-every few seconds, without the runtime overhead of an interpreted language. It's the
-same instinct behind [moeda.casa](https://moeda.casa) — picking the right tool for a
-financial system where correctness and latency both matter — applied here to a
-different problem: not moving money across a payment rail into crypto, but reading
-and reconciling live market state across exchanges that were never designed to talk
-to each other.
+every few seconds, without the runtime overhead of an interpreted language.
 
 Sample output from the arbitrage view: [PDF](doc/speculari.sample.pdf), exported directly
 from the browser.
