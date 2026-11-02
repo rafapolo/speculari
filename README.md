@@ -20,10 +20,7 @@ different problem: not moving money across a payment rail into crypto, but readi
 and reconciling live market state across exchanges that were never designed to talk
 to each other.
 
-Together, moeda.casa and Speculari cover both halves of the same domain: one moves
-real money (PIX, a blockchain) safely from one place to another, the other watches
-prices across fragmented, uncoordinated venues to find where they disagree. Sample
-output from the arbitrage view: [PDF](doc/speculari.sample.pdf), exported directly
+Sample output from the arbitrage view: [PDF](doc/speculari.sample.pdf), exported directly
 from the browser.
 
 ![arbitrage](doc/sample.png)
